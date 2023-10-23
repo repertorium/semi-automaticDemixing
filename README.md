@@ -1,6 +1,6 @@
 # The Music Demixing Machine --  NTF-panning
 
-Multichannel music source separation based on NMF (Non-Negative Matrix Factorization) with panning information. The method is intended for classical music. This is the MATLAB implementation of the system described in this [paper](https://link.springer.com/article/10.1007/s11227-023-05192-5).
+Multichannel music source separation based on NMF (Non-Negative Matrix Factorization) with panning information. The method is intended for classical music recorded with close microphones. This is the MATLAB implementation of the system described in this [paper](https://link.springer.com/article/10.1007/s11227-023-05192-5).
 
 ## Model initialization
 
