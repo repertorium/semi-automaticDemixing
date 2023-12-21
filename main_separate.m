@@ -29,12 +29,27 @@ addpath(genpath('Toolboxes'));
 outputfolder = fullfile(outputfolder, ['date_ ' datestr(now,30)]);
 
 %% USER DEFINED OPTIONS
-load(fullfile(initfolder, 'M_js.mat'), 'NMFparams', 'intervals');
-NMFparams.updateM      = false;                 % Update M
-NMFparams.updateS      = true;                  % Update S (bases)
-NMFparams.BLOCKSIZE    = 2048;                  % Block size (frames)
-NMFparams.NUM_MAX_ITER = 025;                   % # of iterations
-NMFparams.j_names      = {intervals(:).symbol};
+if ischar(initfolder)
+    load(fullfile(initfolder, 'M_js.mat'), 'NMFparams', 'intervals');
+    NMFparams.updateM      = false;                 % Update M
+    NMFparams.updateS      = true;                  % Update S (bases)
+    NMFparams.BLOCKSIZE    = 2048;                  % Block size (frames)
+    NMFparams.NUM_MAX_ITER = 025;                   % # of iterations
+    NMFparams.j_names      = {intervals(:).symbol};
+elseif isnumeric(initfolder)
+    Dwav = dir(fullfile(inputfolder, '*.wav'));
+    if isempty(Dwav)
+        error('No wav files in this folder.');
+    end
+    load('NMFparams_default.mat', 'NMFparams');
+    NMFparams.updateM      = true;                  % Update M
+    NMFparams.updateS      = true;                  % Update S (bases)
+    NMFparams.BLOCKSIZE    = 2048;                  % Block size (frames)
+    NMFparams.NUM_MAX_ITER = 050;                   % # of iterations
+    NMFparams.j_max        = initfolder;
+    NMFparams.j_names      = compose('%d', 1:NMFparams.j_max);
+    NMFparams.s_max        = length(Dwav);
+end
 
 fprintf('Running source separation\n');
 fprintf('... with BLOCKSIZE = %d frames\n', NMFparams.BLOCKSIZE);
@@ -45,6 +60,9 @@ if NMFparams.updateS
     fprintf('... with bases update\n');
 else
     fprintf('... with fixed bases\n');
+end
+if NMFparams.updateM
+    fprintf('... with panning update\n');
 end
 
 %% Run separation

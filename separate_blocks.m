@@ -30,10 +30,18 @@ if isempty(Dwav)
 end
 
 %% Load M_js
-load(fullfile(initfolder, 'M_js.mat'), 'M_js');
+if ischar(initfolder)
+    load(fullfile(initfolder, 'M_js.mat'), 'M_js');
+else
+    M_js = rand(NMFparams.j_max, NMFparams.s_max) + eps;
+end
 
 %% Load instrument bases S_pfj
-load(fullfile(initfolder, 'S_pfj.mat'), 'S_pfj');
+if ischar(initfolder)
+    load(fullfile(initfolder, 'S_pfj.mat'), 'S_pfj');
+else
+    S_pfj = rand(NMFparams.p_max, NMFparams.f_max, NMFparams.j_max) + eps;
+end
 
 %% Analysis parameters
 info     = audioinfo(fullfile(inputfolder, Dwav(1).name));
